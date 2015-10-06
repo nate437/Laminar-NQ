@@ -22,12 +22,37 @@ body{
   -webkit-box-orient: vertical;
   display: flex;
   flex-direction: column;
-  margin-top: calc(50vh - 220px);
+  margin-top: calc(50vh - 180px);
 }
 
 .home-img{
   width: 40px;
   margin:15px;
+}
+
+.icon-container div{
+padding: 5px 5px;
+text-align:center;
+}
+
+.icon-container div .icon-text{
+margin-top: -10px;
+font-size: 10px;
+}
+
+.icon-text{
+  -webkit-transition: color .5s ease;
+  transition: color .5s ease;
+}
+
+.icon-container div svg path{
+  fill: #fbfbfc !important;
+  -webkit-transition: fill .5s ease;
+  transition: fill .5s ease;
+}
+
+.nav-button{
+  cursor: pointer;
 }
 
 @media (max-width: 768px){
