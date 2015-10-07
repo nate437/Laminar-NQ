@@ -45,7 +45,7 @@ font-size: 10px;
   transition: color .5s ease;
 }
 
-.icon-container div svg path{
+.icon-container div svg g path{
   fill: #fbfbfc !important;
   -webkit-transition: fill .5s ease;
   transition: fill .5s ease;
@@ -53,6 +53,11 @@ font-size: 10px;
 
 .nav-button{
   cursor: pointer;
+}
+
+.nav-button:hover svg g path, .nav-button:hover .icon-text{
+  color: #2ebd59 !important;
+  fill: #2ebd59 !important;
 }
 
 @media (max-width: 768px){
