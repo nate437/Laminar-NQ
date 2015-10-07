@@ -264,21 +264,22 @@
         render: function() {
 
           var playlistItems = this.state.data.map(function (item) {
-          return (
-            <tr><td>{item.name}</td></tr>
-          );
-        });
+            return (
+              <tr><td>{item.name}</td></tr>
+            );
+          });
 
-        return (
-          <table class="u-full-width playlist">
-            <thead>
-              <tr>
-                <th>Track</th>
-              </tr>
-              {playlistItems}
-            </thead>
-          </table>
-        );
+          return (
+            <table class="u-full-width playlist">
+              <thead>
+                <tr>
+                  <th>Track</th>
+                </tr>
+                {playlistItems}
+              </thead>
+            </table>
+          );
+        }
     });
 
   React.render(<Playlist url="https://api.spotify.com/v1/me/tracks" />, document.getElementById('queuescontainer'));
