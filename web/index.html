@@ -252,7 +252,7 @@
             url: this.props.url,
             dataType: 'json',
             cache: false,
-            data: {token: getUrlParameter('token');},
+            data: {token: getUrlParameter('token')},
             success: function(data) {
               this.setState({data: data.items});
             }.bind(this),
