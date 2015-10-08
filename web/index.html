@@ -253,6 +253,7 @@
             dataType: 'json',
             cache: false,
             success: function(authdata) {
+              console.log(authdata);
               $.ajax({
                 url: this.props.url,
                 dataType: 'json',
