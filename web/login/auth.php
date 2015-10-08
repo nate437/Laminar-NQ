@@ -1,21 +1,32 @@
 <?php
 require('../../conf.php');
 $url = "https://accounts.spotify.com/api/token";
-$data = array(
+$fields = array(
   'grant_type' => 'authorization_code',
-  'code' => $_get["token"],
+  'code' => $_GET["token"],
+  'client_id' => $client_id,
+  'client_secret' => $client_secret,
   'redirect_uri' => 'http://laminarnq.com/login'
 );
 
-$options = array(
-    'http' => array(
-        'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
-        'method'  => 'POST',
-        'content' => http_build_query($data),
-    ),
-);
-$context  = stream_context_create($options);
-$result = file_get_contents($url, false, $context);
+$fields_string = "";
 
-var_dump($result);
+foreach($fields as $key=>$value) { $fields_string .= $key.'='.$value.'&'; }
+rtrim($fields_string, '&');
+
+//open connection
+$ch = curl_init();
+
+//set the url, number of POST vars, POST data
+curl_setopt($ch,CURLOPT_URL, $url);
+curl_setopt($ch,CURLOPT_POST, count($fields));
+curl_setopt($ch,CURLOPT_POSTFIELDS, $fields_string);
+
+//execute post
+$result = curl_exec($ch);
+echo $result;
+
+//close connection
+curl_close($ch);
+
 ?>
