@@ -29,8 +29,8 @@ $result = curl_exec($ch);
 echo $result;
 
 $resObj = json_decode(substr($result,0,-1));
-
-header('Location: ../?code=' . $resObj->access_token);
+echo $resObj->access_token;
+//header('Location: ../?code=' . $resObj->access_token);
 
 //close connection
 curl_close($ch);
