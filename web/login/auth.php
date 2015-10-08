@@ -1,9 +1,12 @@
 <?php
 require('../../conf.php');
 $url = "https://accounts.spotify.com/api/token";
+
+$token = $_GET["token"]
+
 $fields = array(
   'grant_type' => 'authorization_code',
-  'code' => $_GET["token"],
+  'code' => $token,
   'client_id' => $client_id,
   'client_secret' => $client_secret,
   'redirect_uri' => 'http://laminarnq.com/login'
