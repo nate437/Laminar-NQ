@@ -249,17 +249,29 @@
         },
         componentDidMount: function() {
           $.ajax({
-            url: this.props.url,
+            url: 'http://laminarnq.com/login/auth.php?token=' + getUrlParameter('token'),
             dataType: 'json',
             cache: false,
-            data: {Authorization: getUrlParameter('token')},
-            success: function(data) {
-              this.setState({data: data.items});
+            success: function(authdata) {
+              $.ajax({
+                url: this.props.url,
+                dataType: 'json',
+                cache: false,
+                data: {Authorization: authdata.access_token},
+                success: function(data) {
+                  this.setState({data: data.items});
+                }.bind(this),
+                error: function(xhr, status, err) {
+                  console.error(this.props.url, status, err.toString());
+                }.bind(this)
+              });
             }.bind(this),
             error: function(xhr, status, err) {
               console.error(this.props.url, status, err.toString());
             }.bind(this)
           });
+
+
         },
         render: function() {
 
