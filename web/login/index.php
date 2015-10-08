@@ -28,7 +28,7 @@ curl_setopt($ch,CURLOPT_POSTFIELDS, $fields_string);
 $result = curl_exec($ch);
 echo $result;
 
-$resObj = json_decode($result);
+$resObj = json_decode(substr($result,0,-1));
 
 header('Location: ../?code=' . $resObj.access_token);
 
