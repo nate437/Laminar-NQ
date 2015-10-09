@@ -2,7 +2,7 @@
 require('../../conf.php');
 $url = "https://accounts.spotify.com/api/token";
 
-$token = $_GET["token"]
+$token = $_GET["token"];
 
 $fields = array(
   'grant_type' => 'authorization_code',

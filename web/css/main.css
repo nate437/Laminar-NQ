@@ -5,6 +5,10 @@ body{
   color: #fbfbfc;
 }
 
+th, td{
+  border-color: #222326 !important;
+}
+
 .btn{
   text-decoration: none;
   display: inline-block;

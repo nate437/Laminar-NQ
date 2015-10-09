@@ -106,7 +106,6 @@
 
         <div class="icon-text" >QUEUES</div>
       </div>
-
       <div class="nav-button" id="savedbut">
         <svg
            xmlns:dc="http://purl.org/dc/elements/1.1/"
@@ -253,7 +252,7 @@
             url: this.props.url,
             dataType: 'json',
             cache: false,
-            data: {Authorization: getUrlParameter('code')},
+            headers: {Authorization: "Bearer " + getUrlParameter('code')},
             success: function(data) {
               this.setState({data: data.items});
             }.bind(this),
@@ -266,7 +265,12 @@
 
           var playlistItems = this.state.data.map(function (item) {
             return (
-              <tr><td>{item.name}</td></tr>
+              <tr>
+              <td>{item.track.name}</td>
+              <td>{item.track.artists[0].name}</td>
+              <td>{Math.floor((item.track.duration_ms / 1000) / 60) + ":" + ("00" + Math.floor((item.track.duration_ms / 1000) % 60)).substr(-2,2)}</td>
+	      <td>action</td>
+              </tr>
             );
           });
 
@@ -275,6 +279,10 @@
               <thead>
                 <tr>
                   <th>Track</th>
+                  <th>Artist</th>
+                  <th>Duration</th>
+                  <th></th>
+
                 </tr>
                 {playlistItems}
               </thead>
