@@ -1,0 +1,194 @@
+/* HEADER */
+
+.NQ-header{
+  padding: 10px 15px;
+  padding-bottom: 5px;
+  background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(0,0,0,0)), color-stop(31%, rgba(0,0,0,0)), color-stop(100%, rgba(0,0,0,1))), url('../images/concert2.jpg');
+  background: -webkit-linear-gradient(top, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 31%, rgba(0,0,0,1) 100%), url('../images/concert2.jpg');
+  background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 31%, rgba(0,0,0,1) 100%), url('../images/concert2.jpg');
+  background-position: center;
+  background-size: cover;
+}
+
+.NQ-header .header-image{
+	height: 100px;
+	width: 100px;
+	border-radius: 100px;
+	background-position: center;
+	background-size: cover;
+	box-shadow: 0px 3px 3px rgba(0,0,0,.5);
+	display: inline-block;
+  position: relative;
+  top: 25px;
+}
+
+.NQ-header .header-container{
+	display: inline-block;
+  margin-left: 15px;
+  margin-top: 32px;
+}
+
+.NQ-header .header-title{
+  font-size: 2em;
+  font-weight: 300;
+  line-height: 0.8em;
+}
+
+.NQ-header .header-sub-title{
+  color: #6b6b6b;
+}
+
+/* BUTTONS */
+
+.NQ-button-container{
+  display: flex;
+  flex-direction: row;
+}
+
+.NQ-button-container .action-button{
+  flex-grow: 1;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 1.2em;
+  padding: 5px 0;
+  background-color: #2ebd59;
+  cursor: pointer;
+  transition: background-color .5s ease;
+}
+
+.NQ-button-container .action-button:hover{
+  background-color: #259647;
+}
+
+.NQ-button-container .action-button + .action-button{
+  border-left: 1px solid #fff;
+}
+
+/* QUEUE ITEM */
+
+.NQ-queue-item{
+  background-color: #222326;
+}
+
+.NQ-queue-item .queue-title-group{
+  max-width: 180px;
+  overflow: hidden;
+}
+
+@media (max-width: 549px) {
+
+  .NQ-queue-item .queue-image-group{
+    display: inline;
+  }
+
+  .NQ-queue-item{
+    padding: 7px;
+  }
+
+  .NQ-queue-item .queue-image-group .queue-pop{
+    background-color: #2ebd59;
+    border-radius: 20px;
+    display: inline;
+    text-align: center;
+    padding: 0 7px;
+    font-size: 0.8em;
+    position: relative;
+    left: -20px;
+  }
+
+  .NQ-queue-item .queue-image-group .queue-image{
+    background-position: center;
+    background-size: cover;
+    width: 65px;
+    height: 65px;
+    border-radius: 60px;
+    display: inline-block;
+  }
+
+  .NQ-queue-item .queue-title-group{
+    display: inline-block;
+  }
+
+  .NQ-queue-item .queue-title-group .queue-title{
+    font-size: 1.5em;
+    font-weight: 300;
+  }
+
+  .NQ-queue-item .queue-title-group .queue-subtitle{
+    color: #6b6b6b;
+    font-size:0.8em;
+    position: relative;
+    top: -0.5em;
+  }
+
+  .NQ-queue-item .icon-dots{
+    float: right;
+    padding: 0 10px;
+    margin-top: 20px;
+    font-size: 1.2em;
+
+  }
+
+}
+
+@media (min-width: 550px) {
+
+  .NQ-queue-item{
+
+    display: inline-block;
+    width: 175px;
+  }
+  .NQ-queue-item .queue-image-group .queue-image{
+    background-position: center;
+    background-size: cover;
+    width: 175px;
+    height: 175px;
+  }
+
+  .NQ-queue-item .queue-image-group .queue-pop{
+    background-color: rgba(0,0,0,0.5);
+    text-transform: uppercase;
+    color: #fff;
+    font-size: 0.8em;
+    height: 1.7em;
+    word-spacing: 3px;
+    text-align: center;
+    position: relative;
+    margin-bottom: -1.7em;
+    top: -1.7em;
+    border-radius: 0;
+    display: block;
+  }
+
+  .NQ-queue-item .queue-image-group .queue-pop::after{
+    content: "members";
+  }
+
+  .NQ-queue-item .queue-title-group{
+    padding: 7px;
+  }
+
+  .NQ-queue-item .queue-title-group .queue-title{
+    font-size: 1.5em;
+    font-weight: 300;
+  }
+
+  .NQ-queue-item .queue-title-group .queue-subtitle{
+    color: #6b6b6b;
+    font-size:0.8em;
+    position: relative;
+    top: -0.5em;
+  }
+
+  .NQ-queue-item .icon-dots{
+    position: relative;
+    top: -0.5em;
+    float: right;
+    padding: 0 7px;
+  }
+
+
+}
+
+
+/* PLAYLIST */

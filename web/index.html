@@ -31,6 +31,7 @@
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/skeleton.css">
   <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
 
   <script src="js/utils.js"></script>
   <script src="https://fb.me/react-0.13.3.js"></script>
@@ -237,61 +238,24 @@
       </div>
     </div>
   <div class="page-container">
-    <div class="container" id="queuescontainer"> TEST </div>
+
+    <div class="container" id="queuelistcontainer"></div>
+
+    <div class="container" id="queuecontainer"></div>
   </div>
 
-    <script type="text/jsx">
-    var Playlist = React.createClass({
+  <script type="text/jsx" src="js/components.js"></script>
+  <script type="text/jsx">
+  React.render(
+    <QueueItem title="Test Queue" subTitle="Test Sub Title" participants="12" imgSrc="http://www.telegraph.co.uk/travel/destination/article125984.ece/ALTERNATES/w620/bostonwaterfront.jpg"/>
+    , document.getElementById('queuelistcontainer')
+  );
 
-        getInitialState: function() {
-          return {data: []};
-        },
-        componentDidMount: function() {
-
-          $.ajax({
-            url: this.props.url,
-            dataType: 'json',
-            cache: false,
-            headers: {Authorization: "Bearer " + getUrlParameter('code')},
-            success: function(data) {
-              this.setState({data: data.items});
-            }.bind(this),
-            error: function(xhr, status, err) {
-              console.error(this.props.url, status, err.toString());
-            }.bind(this)
-          });
-        },
-        render: function() {
-
-          var playlistItems = this.state.data.map(function (item) {
-            return (
-              <tr>
-              <td>{item.track.name}</td>
-              <td>{item.track.artists[0].name}</td>
-              <td>{Math.floor((item.track.duration_ms / 1000) / 60) + ":" + ("00" + Math.floor((item.track.duration_ms / 1000) % 60)).substr(-2,2)}</td>
-	      <td>action</td>
-              </tr>
-            );
-          });
-
-          return (
-            <table class="u-full-width playlist">
-              <thead>
-                <tr>
-                  <th>Track</th>
-                  <th>Artist</th>
-                  <th>Duration</th>
-                  <th></th>
-
-                </tr>
-                {playlistItems}
-              </thead>
-            </table>
-          );
-        }
-    });
-
-  React.render(<Playlist url="https://api.spotify.com/v1/me/tracks" />, document.getElementById('queuescontainer'));
-    </script>
+  React.render(
+    <div><Header title="Test" subTitle="subtitle" imgSrc="http://marketing.mst.edu/media/universityadvancement/communications/images/logos/joeminer/Historic_Joe_Miner.jpg"/>
+    <ButtonSet buttons="{[{text: 'btn1'}, {text: 'btn2'}]}" />
+    <div className="sub-container"><Playlist url="https://api.spotify.com/v1/me/tracks" /></div></div>, document.getElementById('queuecontainer')
+  );
+  </script>
  </body>
 </html>
