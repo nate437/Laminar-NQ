@@ -247,11 +247,28 @@
 
       </div>
     </div>
+
+    <div id="settings-pane">
+      <div class="wrapper">
+        <div class="header">
+          settings
+        </div>
+        <div class="backdrop">
+          <div>account</div>
+          <div>privacy</div>
+          <div>notifications</div>
+          <div>advanced</div>
+          <div>help</div>
+        </div>
+      </div>
+    </div>
+
   <div class="page-container">
 
     <div class="container" id="queuelistcontainer"></div>
 
     <div class="container" id="queuecontainer"></div>
+
   </div>
 
   <script type="text/jsx" src="js/components.js"></script>
@@ -262,13 +279,13 @@
     <ButtonSet buttons="{[{text: 'Create'}, {text: 'Join'}]}" />
     <QueueList header="My Queues" queues="{[{ title: 'Test Queue', subTitle: 'Test Sub Title', participants: 12, imgSrc:'http://www.telegraph.co.uk/travel/destination/article125984.ece/ALTERNATES/w620/bostonwaterfront.jpg'}
                                             ,{ title: 'Test Queue', subTitle: 'Test Sub Title', participants: 12, imgSrc:'https://static.pexels.com/photos/9694/pexels-photo.jpeg'}
-                                            ,{ title: 'Test Queue', subTitle: 'Test Sub Title', participants: 12, imgSrc:'https://static.pexels.com/photos/9694/pexels-photo.jpeg'}
-                                             ,{ title: 'Test Queue', subTitle: 'Test Sub Title', participants: 12, imgSrc:'https://static.pexels.com/photos/9694/pexels-photo.jpeg'}]}"/>
+                                            ,{ title: 'Test Queue', subTitle: 'Test Sub Title', participants: 12, imgSrc:'https://static.pexels.com/photos/12572/photo-1443827423664-eac70d49dd0d.jpeg'}
+                                            ,{ title: 'Test Queue', subTitle: 'Test Sub Title', participants: 12, imgSrc:'https://static.pexels.com/photos/15105/pexels-photo.jpg'}]}"/>
 
      <QueueList header="Joined Queues" queues="{[{ title: 'Test Queue', subTitle: 'Test Sub Title', participants: 12, imgSrc:'http://www.telegraph.co.uk/travel/destination/article125984.ece/ALTERNATES/w620/bostonwaterfront.jpg'}
+                                             ,{ title: 'Test Queue', subTitle: 'Test Sub Title', participants: 12, imgSrc:'https://static.pexels.com/photos/6657/snow-landscape-nature-sky.jpeg'}
                                              ,{ title: 'Test Queue', subTitle: 'Test Sub Title', participants: 12, imgSrc:'https://static.pexels.com/photos/9694/pexels-photo.jpeg'}
-                                             ,{ title: 'Test Queue', subTitle: 'Test Sub Title', participants: 12, imgSrc:'https://static.pexels.com/photos/9694/pexels-photo.jpeg'}
-                                              ,{ title: 'Test Queue', subTitle: 'Test Sub Title', participants: 12, imgSrc:'https://static.pexels.com/photos/9694/pexels-photo.jpeg'}]}"/>
+                                             ,{ title: 'Test Queue', subTitle: 'Test Sub Title', participants: 12, imgSrc:'https://static.pexels.com/photos/8155/pexels-photo.jpg'}]}"/>
   </div>  , document.getElementById('queuelistcontainer')
   );
 
@@ -278,5 +295,16 @@
     <div className="sub-container"><Playlist url="https://api.spotify.com/v1/me/tracks" /></div></div>, document.getElementById('queuecontainer')
   );
   </script>
+  <script>
+  $("#settingsbut").click(function(){
+    $("#settings-pane").css({opacity: 1, visibility: "visible"});
+    $("#settingsbut svg g path, #settingsbut .icon-text").css({color: '#26ADC4 !important', fill: '#26ADC4 !important'});
+  });
+
+  $("#settings-pane:not(.wrapper)").click(function(){
+    $("#settings-pane").css({opacity: 0, visibility: "hidden"});
+  });
+  </script>
+
  </body>
 </html>
