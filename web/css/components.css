@@ -134,9 +134,10 @@
   .NQ-queue-item .icon-dots{
     float: right;
     padding: 0 10px;
-    margin-top: 20px;
+    margin-top: 33px;
     font-size: 1.2em;
-
+    margin-bottom: -50px;
+    cursor: pointer;
   }
 
 }
@@ -203,6 +204,9 @@
     top: -0.5em;
     float: right;
     padding: 0 7px;
+    margin-bottom: -20px;
+    margin-top: 21px;
+    cursor: pointer;
   }
 
   .NQ-queue-group .queues-container{
@@ -225,14 +229,7 @@
   overflow: visible;
   height:0px;
 }
-/*
-.NQ-queue-item .slide-menu{
-  position: relative;
-  top: -10px;
-  overflow: visible;
-  height:0px;
-}
-*/
+
 td .slide-menu .icon-dots{
   float: left;
   margin-top: 22px;
@@ -240,6 +237,61 @@ td .slide-menu .icon-dots{
 }
 
 .NQ-popmenu-container{
+  z-index: 20;
+}
+
+@media (max-width: 549px) {
+  .NQ-queue-item .slide-menu{
+    position: relative;
+    top: -79px;
+    overflow: visible;
+    height:0px;
+  }
+
+  .NQ-queue-item .NQ-popmenu-container{
+    position: relative;
+    float: right;
+    right: -10px;
+    height: 91px;
+    display: flex;
+    margin-top: -2px;
+    margin-bottom: -80px;
+    width: 0px;
+    margin-left: -200px;
+    overflow: hidden;
+    transition: all .5s ease;
+  }
+  .NQ-queue-item .NQ-popmenu-container .menu-item{
+    padding-top:13px;
+  }
+}
+
+@media (min-width: 550px) {
+  .NQ-queue-item .NQ-popmenu-container{
+    position: relative;
+    float: right;
+    right: 0;
+    height: 52px;
+    display: flex;
+    margin-top: -2px;
+    margin-bottom: -9px;
+    width: 0px;
+    margin-left: -200px;
+    overflow: hidden;
+    transition: all .5s ease;
+  }
+
+  .NQ-queue-item .NQ-popmenu-container .menu-item .item-text{
+    line-height: 0.1em;
+  }
+}
+
+.NQ-queue-item .NQ-popmenu-container.open{
+  width: 175px;
+  margin-left: -175px;
+}
+
+td .NQ-popmenu-container{
   position: relative;
   float: right;
   right: 0;
@@ -253,7 +305,7 @@ td .slide-menu .icon-dots{
   transition: all .5s ease;
 }
 
-.NQ-popmenu-container.open{
+td .NQ-popmenu-container.open{
   width: 200px;
   margin-left: -200px;
 }
@@ -263,6 +315,11 @@ td .slide-menu .icon-dots{
   text-align: center;
   flex-grow:1;
   cursor: pointer;
+}
+
+.NQ-popmenu-container .menu-item .item-text{
+  text-transform: uppercase;
+  font-size: .8em;
 }
 
 .NQ-popmenu-container .menu-item i{

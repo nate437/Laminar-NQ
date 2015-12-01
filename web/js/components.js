@@ -129,7 +129,7 @@ var Playlist = React.createClass({
           <td>{item.track.name}</td>
           <td>{item.track.artists[0].name}</td>
           <td className="hide-small">{Math.floor((item.track.duration_ms / 1000) / 60) + ":" + ("00" + Math.floor((item.track.duration_ms / 1000) % 60)).substr(-2,2)}</td>
-          <td><PopMenu options="{[{text: 'code', icon: 'icon-qrcode', color: '#2ebd59'},{text: 'delete', icon: 'icon-trash', color: '#CA3645'}]}" /></td>
+          <td><PopMenu options="{[{text: 'artist', icon: 'icon-person', color: '#2ebd59'},{text: 'album', icon: 'icon-disc', color: '#26ADC4'},{text: 'delete', icon: 'icon-trash', color: '#CA3645'}]}" /></td>
           </tr>
         );
       });
