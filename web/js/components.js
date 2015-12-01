@@ -38,6 +38,63 @@ var Header = React.createClass({
 	}
 });
 
+//SAVE BUTTON
+//Constructs a togglable save button
+//REQUIRED saved<Boolean>
+var SaveButton = React.createClass({
+	getInitialState: function() {
+    return {saved: this.props.saved};
+  },
+  handleClick: function(event) {
+    this.setState({saved: !this.state.saved});
+  },
+	render: function(){
+		var icon = this.state.saved ? 'icon-check' : 'icon-plus';
+    return (
+      <i onClick={this.handleClick} className={icon}>
+      </i>
+		);
+	}
+});
+
+//POPOVER MENU
+//Constructs an interactive popover menu
+//REQUIRED options<MenuObject>
+
+var PopMenu = React.createClass({
+	getInitialState: function() {
+		return {open: false};
+	},
+	handleClick: function(event) {
+		this.setState({open: !this.state.open});
+	},
+	render: function() {
+
+		var menuItems = eval(this.props.options).map(function (item) {
+			var itemStyle = {backgroundColor: item.color};
+			return(
+				<div className="menu-item" style={itemStyle}>
+				<i className={item.icon}></i>
+				<div className="item-text">{item.text}</div>
+				</div>
+			);
+		});
+
+    return(
+			<div className="slide-menu">
+				<div className={(this.state.open ? " open" : "") + " NQ-popmenu-container"}>
+					{menuItems}
+					<div onClick={this.handleClick} className="menu-item" style={{backgroundColor: "#34363B"}}>
+					  <i className="icon-cancel"></i>
+					  <div className="item-text">cancel</div>
+					</div>
+				</div>
+				<i onClick={this.handleClick} className="icon-dots"></i>
+			</div>
+		);
+	}
+});
+
 
 //PLAYLIST
 //Constructs a playlist from a given Spotify REST endpoint.
@@ -68,10 +125,11 @@ var Playlist = React.createClass({
       var playlistItems = this.state.data.map(function (item) {
         return (
           <tr>
+					<td><SaveButton/></td>
           <td>{item.track.name}</td>
           <td>{item.track.artists[0].name}</td>
-          <td>{Math.floor((item.track.duration_ms / 1000) / 60) + ":" + ("00" + Math.floor((item.track.duration_ms / 1000) % 60)).substr(-2,2)}</td>
-          <td><i className="icon-dots"></i></td>
+          <td className="hide-small">{Math.floor((item.track.duration_ms / 1000) / 60) + ":" + ("00" + Math.floor((item.track.duration_ms / 1000) % 60)).substr(-2,2)}</td>
+          <td><PopMenu options="{[{text: 'code', icon: 'icon-qrcode', color: '#2ebd59'},{text: 'delete', icon: 'icon-trash', color: '#CA3645'}]}" /></td>
           </tr>
         );
       });
@@ -80,9 +138,10 @@ var Playlist = React.createClass({
         <table className="u-full-width playlist">
           <thead>
             <tr>
+						  <th></th>
               <th>Track</th>
               <th>Artist</th>
-              <th>Duration</th>
+              <th className="hide-small">Duration</th>
               <th></th>
 
             </tr>
@@ -100,7 +159,6 @@ var Playlist = React.createClass({
 var ButtonSet = React.createClass({
 
   render: function() {
-
     var buttonItems = eval(this.props.buttons).map(function (item) {
       return (
         <div className="action-button">{item.text}</div>
@@ -132,9 +190,30 @@ var QueueItem = React.createClass({
 					<div className="queue-title">{this.props.title}</div>
 					<div className="queue-subtitle">{this.props.subTitle}</div>
 				</div>
-				<i className="icon-dots"></i>
+				<PopMenu options="{[{text: 'code', icon: 'icon-qrcode', color: '#2ebd59'},{text: 'delete', icon: 'icon-trash', color: '#CA3645'}]}" />
 			</div>
-		)
+		);
 	}
+});
 
+//QUEUE LIST
+//Constructs a set of queue items with title.
+//REQUIRED: header<String>, queues<QueueObject>
+var QueueList = React.createClass({
+	render: function() {
+		var queueItems = eval(this.props.queues).map(function (item) {
+			return(
+				<QueueItem title={item.title} subTitle={item.subTitle} imgSrc={item.imgSrc} participants={item.participants}/>
+			);
+		});
+
+	  return(
+			<div className="NQ-queue-group">
+			<div className="queue-group-header">{this.props.header}</div>
+			<div className="queues-container">
+			  {queueItems}
+			</div>
+			</div>
+		);
+	}
 });

@@ -1,67 +1,86 @@
 /*FONTS*/
 
+@charset "UTF-8";
+
 @font-face {
-  font-family: 'icons';
-  src: url('../fonts/icons.ttf?31749996') format('truetype');
+  font-family: "custom";
+  src:url("../fonts/custom.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
-}
-/* Chrome hack: SVG is rendered more smooth in Windozze. 100% magic, uncomment if you need it. */
-/* Note, that will break hinting! In other OS-es font will be not as sharp as it could be */
-/*
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-  @font-face {
-    font-family: 'icons';
-    src: url('../font/icons.svg?31749996#icons') format('svg');
-  }
-}
-*/
 
- [class^="icon-"]:before, [class*=" icon-"]:before {
-  font-family: "icons";
-  font-style: normal;
-  font-weight: normal;
+}
+
+[data-icon]:before {
+  font-family: "custom" !important;
+  content: attr(data-icon);
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
   speak: none;
-
-  display: inline-block;
-  text-decoration: inherit;
-  width: 1em;
-  margin-right: .2em;
-  text-align: center;
-  /* opacity: .8; */
-
-  /* For safety - reset parent styles, that can break glyph codes*/
-  font-variant: normal;
-  text-transform: none;
-
-  /* fix buttons height, for twitter bootstrap */
-  line-height: 1em;
-
-  /* Animation center compensation - margins should be symmetric */
-  /* remove if not needed */
-  margin-left: .2em;
-
-  /* you can be more comfortable with increased icons size */
-  /* font-size: 120%; */
-
-  /* Font smoothing. That was taken from TWBS */
+  line-height: 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  /* Uncomment for 3D effect */
-  /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
 }
 
-.icon-dots:before { content: '\e800'; } /* '' */
-.icon-spotify:before { content: '\e801'; } /* '' */
-.icon-refresh:before { content: '\e802'; } /* '' */
-.icon-chev:before { content: '\e803'; } /* '' */
-.icon-left-chev:before { content: '\e804'; } /* '' */
-.icon-right-chev:before { content: '\e805'; } /* '' */
-.icon-up-chev:before { content: '\e806'; } /* '' */
-.icon-search:before { content: '\e807'; } /* '' */
+[class^="icon-"]:before,
+[class*=" icon-"]:before {
+  font-family: "custom" !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
+.icon-check:before {
+  content: "\e000";
+  font-size: 20px;
+  color: #2ebd59;
+}
+.icon-plus:before {
+  content: "\e001";
+  font-size: 20px;
+}
+.icon-dots:before {
+  content: "\e002";
+  font-size: 20px;
 
+}
+.icon-dots{
+  margin-top:7px;
+  margin-right:7px;
+}
+.icon-cancel:before {
+  content: "\e003";
+}
+.icon-trash:before {
+  content: "\e004";
+}
+.icon-disc:before {
+  content: "\e005";
+}
+.icon-leave:before {
+  content: "\e006";
+}
+.icon-qrcode:before {
+  content: "\e007";
+}
+.icon-search:before {
+  content: "\e008";
+}
+.icon-spotify:before {
+  content: "\e009";
+}
+.icon-refresh:before {
+  content: "\e00a";
+}
+.icon-person:before {
+  content: "\e00b";
+}
 
 /* BASICS */
 body{
@@ -80,9 +99,15 @@ th{
   color: #888
 }
 
-@media (max-width: 549px) {
+@media (max-width: 667px) {
   .sub-container {
     padding: 0 15px; }
+}
+
+@media (max-width: 667px) {
+  .hide-small {
+    display: none;
+  }
 }
 
 .btn{
@@ -248,8 +273,7 @@ font-size: 10px;
   .menu-nav{
     height: 70px;
     width: 100vw;
-
-    top: calc(100vh - 70px);
+    top: calc(100vh - 69px);
     -webkit-box-orient:horizontal;
     flex-direction: row;
   }
