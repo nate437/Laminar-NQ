@@ -1,0 +1,11 @@
+Needed PHP Files
+
+JoinedQueues // List of queues joined
+OwnedQueues
+SavedSongs
+AddSavedSong
+JoinQueue // Adds UID(session variable) to QUID
+RemoveQueue
+RemoveSavedSong
+CreateQueue
+
