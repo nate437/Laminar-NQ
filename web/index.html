@@ -248,17 +248,38 @@
       </div>
     </div>
 
-    <div id="settings-pane">
+    <div class="dim"></div>
+
+    <div id="settings-pane" class="modal">
       <div class="wrapper">
         <div class="header">
           settings
         </div>
         <div class="backdrop">
-          <div>account</div>
-          <div>privacy</div>
-          <div>notifications</div>
-          <div>advanced</div>
-          <div>help</div>
+          <a><div class="tappable">account</div></a>
+          <a><div class="tappable">privacy</div></a>
+          <a><div class="tappable">notifications</div></a>
+          <a><div class="tappable">advanced</div></a>
+          <a><div class="tappable">help</div></a>
+        </div>
+      </div>
+    </div>
+
+    <div id="create-pane" class="modal">
+      <div class="wrapper">
+        <div class="header">
+          create queue
+        </div>
+        <div class="backdrop">
+          <input type="text" placeholder="Queue Title"/>
+          <div class="stripe"></div>
+          <input type="password" placeholder="Queue Password"/>
+          <div class="stripe"></div>
+          <div id="image-search">
+          </div>
+        </div>
+        <div id="create-butt">
+          Create Queue
         </div>
       </div>
     </div>
@@ -271,12 +292,23 @@
 
   </div>
 
+
+<script>
+var createShow = function(){
+
+    $("#create-pane, .dim").css({opacity: 1, visibility: "visible"});
+
+}
+</script>
+
   <script type="text/jsx" src="js/components.js"></script>
   <script type="text/jsx">
+
+  React.render(<ImageSearch />, document.getElementById('image-search'));
   React.render(
     <div>
     <Header title="Queues" subTitle=""/>
-    <ButtonSet buttons="{[{text: 'Create'}, {text: 'Join'}]}" />
+    <ButtonSet buttons="{[{text: 'Create', action: createShow}, {text: 'Join'}]}" />
     <QueueList header="My Queues" queues="{[{ title: 'Test Queue', subTitle: 'Test Sub Title', participants: 12, imgSrc:'http://www.telegraph.co.uk/travel/destination/article125984.ece/ALTERNATES/w620/bostonwaterfront.jpg'}
                                             ,{ title: 'Test Queue', subTitle: 'Test Sub Title', participants: 12, imgSrc:'https://static.pexels.com/photos/9694/pexels-photo.jpeg'}
                                             ,{ title: 'Test Queue', subTitle: 'Test Sub Title', participants: 12, imgSrc:'https://static.pexels.com/photos/12572/photo-1443827423664-eac70d49dd0d.jpeg'}
@@ -291,19 +323,51 @@
 
   React.render(
     <div><Header title="Test" subTitle="subtitle" imgSrc="http://marketing.mst.edu/media/universityadvancement/communications/images/logos/joeminer/Historic_Joe_Miner.jpg"/>
-    <ButtonSet buttons="{[{text: 'btn1'}, {text: 'btn2'}]}" />
-    <div className="sub-container"><Playlist url="https://api.spotify.com/v1/me/tracks" /></div></div>, document.getElementById('queuecontainer')
+    <ButtonSet buttons="{[{text: 'btn1'}, {text: 'btn2'}]}" /></div>
+
+    , document.getElementById('queuecontainer')
+
   );
-  </script>
-  <script>
+  //    <div className="sub-container"><Playlist url="https://api.spotify.com/v1/me/tracks" /></div></div>
   $("#settingsbut").click(function(){
-    $("#settings-pane").css({opacity: 1, visibility: "visible"});
+    $("#settings-pane, .dim").css({opacity: 1, visibility: "visible"});
     $("#settingsbut svg g path, #settingsbut .icon-text").css({color: '#26ADC4 !important', fill: '#26ADC4 !important'});
   });
 
-  $("#settings-pane:not(.wrapper)").click(function(){
-    $("#settings-pane").css({opacity: 0, visibility: "hidden"});
+  $(".dim").click(function(){
+    $("#settings-pane, #create-pane, .dim").css({opacity: 0, visibility: "hidden"});
   });
+
+  var refreshQueues = function(){
+    $("#settings-pane, #create-pane, .dim").css({opacity: 0, visibility: "hidden"});
+    $.ajax({
+      url: "http://laminarnq.com/requests/myQueues.php",
+      dataType: 'json',
+      cache: false,
+      success: function(data) {
+        React.render(
+          <div>
+          <Header title="Queues" subTitle=""/>
+          <ButtonSet buttons="{[{text: 'Create', action: createShow}, {text: 'Join'}]}" />
+          <QueueList header="My Queues" queues="{[{ title: 'Test Queue', subTitle: 'Test Sub Title', participants: 12, imgSrc:'http://www.telegraph.co.uk/travel/destination/article125984.ece/ALTERNATES/w620/bostonwaterfront.jpg'}
+                                                  ,{ title: 'Test Queue', subTitle: 'Test Sub Title', participants: 12, imgSrc:'https://static.pexels.com/photos/9694/pexels-photo.jpeg'}
+                                                  ,{ title: 'Test Queue', subTitle: 'Test Sub Title', participants: 12, imgSrc:'https://static.pexels.com/photos/12572/photo-1443827423664-eac70d49dd0d.jpeg'}
+                                                  ,{ title: 'Test Queue', subTitle: 'Test Sub Title', participants: 12, imgSrc:'https://static.pexels.com/photos/15105/pexels-photo.jpg'}]}"/>
+
+           <QueueList header="Joined Queues" queues="{[{ title: 'Test Queue', subTitle: 'Test Sub Title', participants: 12, imgSrc:'http://www.telegraph.co.uk/travel/destination/article125984.ece/ALTERNATES/w620/bostonwaterfront.jpg'}
+                                                   ,{ title: 'Test Queue', subTitle: 'Test Sub Title', participants: 12, imgSrc:'https://static.pexels.com/photos/6657/snow-landscape-nature-sky.jpeg'}
+                                                   ,{ title: 'Test Queue', subTitle: 'Test Sub Title', participants: 12, imgSrc:'https://static.pexels.com/photos/9694/pexels-photo.jpeg'}
+                                                   ,{ title: 'Test Queue', subTitle: 'Test Sub Title', participants: 12, imgSrc:'https://static.pexels.com/photos/8155/pexels-photo.jpg'}]}"/>
+        </div>  , document.getElementById('queuelistcontainer')
+        );
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.error(this.props.url, status, err.toString());
+      }.bind(this)
+    });
+  }
+
+  $("#create-butt").click(refreshQueues());
   </script>
 
  </body>

@@ -161,7 +161,7 @@ var ButtonSet = React.createClass({
   render: function() {
     var buttonItems = eval(this.props.buttons).map(function (item) {
       return (
-        <div className="action-button">{item.text}</div>
+        <div className="action-button" onClick={item.action}>{item.text}</div>
       );
     });
 
@@ -188,7 +188,7 @@ var QueueItem = React.createClass({
 				</div>
 				<div className="queue-title-group">
 					<div className="queue-title">{this.props.title}</div>
-					<div className="queue-subtitle">{this.props.subTitle}</div>
+					<div className="queue-subtitdoes updating an attribute of a react component update it?le">{this.props.subTitle}</div>
 				</div>
 				<PopMenu options="{[{text: 'code', icon: 'icon-qrcode', color: '#2ebd59'},{text: 'delete', icon: 'icon-trash', color: '#CA3645'}]}" />
 			</div>
@@ -200,6 +200,26 @@ var QueueItem = React.createClass({
 //Constructs a set of queue items with title.
 //REQUIRED: header<String>, queues<QueueObject>
 var QueueList = React.createClass({
+
+	getInitialState: function() {
+		return {data: []};
+	},
+	componentDidMount: function() {
+
+		$.ajax({
+			url: this.props.url,
+			dataType: 'json',
+			cache: false,
+			headers: {Authorization: "Bearer " + getUrlParameter('code')},
+			success: function(data) {
+				this.setState({data: data.items});
+			}.bind(this),
+			error: function(xhr, status, err) {
+				console.error(this.props.url, status, err.toString());
+			}.bind(this)
+		});
+	},
+
 	render: function() {
 		var queueItems = eval(this.props.queues).map(function (item) {
 			return(
@@ -213,6 +233,52 @@ var QueueList = React.createClass({
 			<div className="queues-container">
 			  {queueItems}
 			</div>
+			</div>
+		);
+	}
+});
+
+//IMAGE SEARCH
+var ImageSearch = React.createClass({
+	getInitialState: function() {
+		return {images: []};
+	},
+	handleChange: function(e) {
+    if( e.which == 13 ) {
+        this.updateValue(e.target.value);
+    }
+	},
+	updateValue: function(phrase) {
+		$.ajax({
+			url: "https://api.gettyimages.com:443/v3/search/images/creative?phrase=" + phrase,
+			dataType: 'json',
+			headers: {'Api-Key': "9msv26ghjyp8zg6wsazf3s57"},
+			success: function(data) {
+				this.setState({images: data.images});
+			}.bind(this),
+			error: function(xhr, status, err) {
+				console.log(xhr);
+				console.error("Getty Images", status, err.toString());
+			}.bind(this)
+		});
+	},
+	render: function() {
+		var imageItems = eval(this.state.images).map(function (item) {
+			return(
+				<span>
+					<input id={item.id} type="radio" name="imageSrc" value={item.display_sizes[0].uri}/>
+					<label htmlFor={item.id}> <img src={item.display_sizes[0].uri}/> </label>
+				</span>
+			);
+		});
+
+		return (
+			<div>
+				<input type="search" placeholder="Photo Search" onKeyPress={this.handleChange}/>
+				<div className="stripe"></div>
+				<div className="image-select">
+	        {imageItems}
+				</div>
 			</div>
 		);
 	}
