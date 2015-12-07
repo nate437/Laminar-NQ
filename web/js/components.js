@@ -68,17 +68,20 @@ var PopMenu = React.createClass({
 	handleClick: function(event) {
 		this.setState({open: !this.state.open});
 	},
+	handleChildClick: function(data, evt){
+		data.func();
+	},
 	render: function() {
 
 		var menuItems = eval(this.props.options).map(function (item) {
 			var itemStyle = {backgroundColor: item.color};
 			return(
-				<div className="menu-item" style={itemStyle}>
+				<div onClick={this.handleChildClick.bind(null,item)} className="menu-item" style={itemStyle}>
 				<i className={item.icon}></i>
 				<div className="item-text">{item.text}</div>
 				</div>
 			);
-		});
+		}.bind(this));
 
     return(
 			<div className="slide-menu">
@@ -105,27 +108,30 @@ var Playlist = React.createClass({
     getInitialState: function() {
       return {data: []};
     },
+		refresh: function() {
+			$.ajax({
+				url: this.props.url,
+				dataType: 'json',
+				cache: false,
+				success: function(data) {
+					this.setState({data: data.items});
+				}.bind(this),
+				error: function(xhr, status, err) {
+					console.error(xhr, status, err.toString());
+				}.bind(this)
+			});
+		},
     componentDidMount: function() {
-
-      $.ajax({
-        url: this.props.url,
-        dataType: 'json',
-        cache: false,
-        headers: {Authorization: "Bearer " + getUrlParameter('code')},
-        success: function(data) {
-          this.setState({data: data.items});
-        }.bind(this),
-        error: function(xhr, status, err) {
-          console.error(this.props.url, status, err.toString());
-        }.bind(this)
-      });
+			this.refresh();
+			setInterval(this.refresh, 10000);
     },
+
     render: function() {
 
-      var playlistItems = this.state.data.map(function (item) {
+      var playlistItems = this.state.data == [] ? "There's nothing here yet." : this.state.data.map(function (item) {
         return (
           <tr>
-					<td><SaveButton/></td>
+					<td><SaveButton saved={item.track.saved}/></td>
           <td>{item.track.name}</td>
           <td>{item.track.artists[0].name}</td>
           <td className="hide-small">{Math.floor((item.track.duration_ms / 1000) / 60) + ":" + ("00" + Math.floor((item.track.duration_ms / 1000) % 60)).substr(-2,2)}</td>
@@ -143,10 +149,11 @@ var Playlist = React.createClass({
               <th>Artist</th>
               <th className="hide-small">Duration</th>
               <th></th>
-
             </tr>
+					</thead>
+					<tbody>
             {playlistItems}
-          </thead>
+          </tbody>
         </table>
       );
     }
@@ -180,19 +187,40 @@ var ButtonSet = React.createClass({
 var QueueItem = React.createClass({
 	render: function() {
 		var bgImg= {backgroundImage: "url(" + this.props.imgSrc + ")"};
-		return(
-			<div className="NQ-queue-item">
-			  <div className="queue-image-group">
-					<div className="queue-image" style={bgImg}></div>
-					<div className="queue-pop">{this.props.participants} </div>
+		if (this.props.owned == "true"){
+			return(
+				<div className="NQ-queue-item">
+					<div onClick={() => {showQueue(this.props.QID,this.props.title,this.props.subTitle,this.props.imgSrc)}} className="hit-box">
+					  <div className="queue-image-group">
+							<div className="queue-image" style={bgImg}></div>
+							<div className="queue-pop">{this.props.participants} </div>
+						</div>
+						<div className="queue-title-group">
+							<div className="queue-title">{this.props.title}</div>
+							<div className="queue-subtitle">{this.props.subTitle}</div>
+						</div>
+					</div>
+					<PopMenu options={"{[{func: function(){detQueue("+this.props.QID+",'"+this.props.Pass+"')},text: 'code', icon: 'icon-qrcode', color: '#2ebd59'},{func: function(){remQueue(" + this.props.QID + ")}, text: 'delete', icon: 'icon-trash', color: '#CA3645'}]}"} />
 				</div>
-				<div className="queue-title-group">
-					<div className="queue-title">{this.props.title}</div>
-					<div className="queue-subtitdoes updating an attribute of a react component update it?le">{this.props.subTitle}</div>
+			);
+		}
+	  else{
+			return(
+				<div className="NQ-queue-item">
+					<div onClick={() => {showQueue(this.props.QID,this.props.title,this.props.subTitle,this.props.imgSrc)}} className="hit-box">
+						<div className="queue-image-group">
+							<div className="queue-image" style={bgImg}></div>
+							<div className="queue-pop">{this.props.participants} </div>
+						</div>
+						<div className="queue-title-group">
+							<div className="queue-title">{this.props.title}</div>
+							<div className="queue-subtitle">{this.props.subTitle}</div>
+						</div>
+					</div>
+					<PopMenu options={"{[{func: function(){detQueue("+this.props.QID+",'"+this.props.Pass+"')},text: 'code', icon: 'icon-qrcode', color: '#2ebd59'},{func: function(){remQueue(" + this.props.QID + ")}, text: 'leave', icon: 'icon-leave', color: '#CA3645'}]}"} />
 				</div>
-				<PopMenu options="{[{text: 'code', icon: 'icon-qrcode', color: '#2ebd59'},{text: 'delete', icon: 'icon-trash', color: '#CA3645'}]}" />
-			</div>
-		);
+			);
+		}
 	}
 });
 
@@ -200,32 +228,12 @@ var QueueItem = React.createClass({
 //Constructs a set of queue items with title.
 //REQUIRED: header<String>, queues<QueueObject>
 var QueueList = React.createClass({
-
-	getInitialState: function() {
-		return {data: []};
-	},
-	componentDidMount: function() {
-
-		$.ajax({
-			url: this.props.url,
-			dataType: 'json',
-			cache: false,
-			headers: {Authorization: "Bearer " + getUrlParameter('code')},
-			success: function(data) {
-				this.setState({data: data.items});
-			}.bind(this),
-			error: function(xhr, status, err) {
-				console.error(this.props.url, status, err.toString());
-			}.bind(this)
-		});
-	},
-
 	render: function() {
-		var queueItems = eval(this.props.queues).map(function (item) {
+		var queueItems = (this.props.queues[0] === undefined ? "There's nothing here yet." : eval(this.props.queues).map(function (item) {
 			return(
-				<QueueItem title={item.title} subTitle={item.subTitle} imgSrc={item.imgSrc} participants={item.participants}/>
+				<QueueItem owned={this.props.owned} title={item.title} Pass={item.Pass} QID={item.QID} subTitle={item.owner + " - " + moment(item.CreatedDate).format("MMM D")} imgSrc={item.imgSrc} participants={item.participants}/>
 			);
-		});
+		}.bind(this)));
 
 	  return(
 			<div className="NQ-queue-group">
@@ -278,6 +286,52 @@ var ImageSearch = React.createClass({
 				<div className="stripe"></div>
 				<div className="image-select">
 	        {imageItems}
+				</div>
+			</div>
+		);
+	}
+});
+
+//SONG SEARCH
+var SongSearch = React.createClass({
+	getInitialState: function() {
+		return {songs: []};
+	},
+	updateValue: function(phrase) {
+		$.ajax({
+			url: " https://api.spotify.com/v1/search?type=track&q=" + phrase,
+			dataType: 'json',
+			crossDomain: true,
+			success: function(data) {
+				this.setState({songs: data.tracks.items});
+			}.bind(this),
+			error: function(xhr, status, err) {
+				console.log(xhr);
+				console.error("Track req", status, err.toString());
+			}.bind(this)
+		});
+	},
+	handleChange: function(e) {
+		if( e.which == 13 ) {
+				this.updateValue(e.target.value);
+		}
+	},
+	render: function() {
+		var songItems = eval(this.state.songs).map(function (item) {
+			return(
+				<div>
+					<input id={item.id} type="checkbox" value={item.id}/>
+					<label htmlFor={item.id}> <img src={item.album.images[0].url}/> <div> <div className="stitle">{item.name}</div><div className="sartist">{item.artists[0].name}</div></div></label>
+				</div>
+			);
+		});
+
+		return (
+			<div>
+				<input type="search" placeholder="Song Search" onKeyPress={this.handleChange}/>
+				<div className="stripe"></div>
+				<div className="song-select">
+	        {songItems}
 				</div>
 			</div>
 		);

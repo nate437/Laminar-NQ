@@ -58,7 +58,8 @@ $expdate = date("Y-m-d H:i:s",time() + $resObj->expires_in);
 
 echo $expdate;
 
-$res = mysqli_query($db_con, "REPLACE INTO People (ID, Fname, hasSP, pic, SPkey, SPkeyExp, SPRefkey) VALUES
-                            (" . $user->id . ",'" . $user->display_name . "',1,'" . $user->images[0]->url ."','" . $resObj->access_token . "','" . $expdate . "','" . $resObj->refresh_token . "')");
+$res = mysqli_query($db_con, "REPLACE INTO People (ID, Fname, hasSP, pic, SPkey, SPkeyExp, SPRefkey) VALUES ('" . $user->id . "','" . $user->display_name . "',1,'" . (isset($user->images[0]->url) ? $user->images[0]->url : " ") ."','" . $resObj->access_token . "','" . $expdate . "','" . $resObj->refresh_token . "')");
 
+
+header('Location: ../');
 ?>

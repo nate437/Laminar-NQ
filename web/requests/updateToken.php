@@ -6,11 +6,11 @@ if (!isset( $uid )){
   $uid = mysqli_real_escape_string($db_con, $_SESSION["UID"]);
 }
 
-$data = mysqli_query($db_con, "SELECT SPkey, SPRefkey FROM People WHERE SPkeyExp <= NOW() AND ID = " . $uid);
+$data = mysqli_query($db_con, "SELECT SPkey, SPRefkey FROM People WHERE SPkeyExp <= NOW() AND ID = '" . $uid . "'");
 
 if (mysqli_num_rows($data) == 0){
   //echo "Key is valid.";
-  $accessToken = mysqli_fetch_array(mysqli_query($db_con, "SELECT SPkey FROM People WHERE ID = " . $uid))["SPkey"];
+  $accessToken = mysqli_fetch_array(mysqli_query($db_con, "SELECT SPkey FROM People WHERE ID = '" . $uid . "'"))["SPkey"];
 }
 
 else{
@@ -55,5 +55,5 @@ if (isset($result->refresh_token)){
 $accessToken = $result->access_token;
 
 $res = mysqli_query($db_con, "REPLACE INTO People (ID, SPkey, SPkeyExp, SPRefkey) VALUES
-                            (" . $uid . ",'" . $result->access_token . "','" . $expdate . "','" . $Refkey . "')");
+                            ('" . $uid . "','" . $result->access_token . "','" . $expdate . "','" . $Refkey . "')");
 }

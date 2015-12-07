@@ -238,6 +238,11 @@ td .slide-menu .icon-dots{
 
 .NQ-popmenu-container{
   z-index: 20;
+  visibility: hidden;
+}
+
+.NQ-popmenu-container.open{
+  visibility: visible;
 }
 
 @media (max-width: 549px) {

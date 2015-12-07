@@ -399,7 +399,7 @@ input:focus + .stripe{
   opacity: 1;
 }
 
-/*IMAGE SELECT*/
+/*IMAGE/SONG SELECT*/
 input{
   margin-bottom: 5px;
 }
@@ -420,17 +420,43 @@ input{
   margin-bottom: -8px;
 }
 
-input[type=radio] {
+.song-select{
+  max-height: 200px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.song-select div label img{
+  max-width: 90px;
+  max-height: 95px;
+  margin-bottom: -8px;
+}
+
+.song-select div label {
+  width: calc(100% - 5px);
+  text-transform: none;
+  background-color:#222326;
+}
+.song-select div label > div{
+  display: inline-block;
+  max-width: 180px;
+  max-height: 95px;
+  overflow: hidden;
+}
+
+input[type=radio],input[type=checkbox] {
     display: none;
 }
 
-input[type=radio] + label{
+input[type=radio] + label,
+input[type=checkbox] + label{
   border: solid #000 2px;
   transition: all .2s ease;
   display: inline-block;
 }
 
-input[type=radio]:checked + label{
+input[type=radio]:checked + label,
+input[type=checkbox]:checked + label{
   border: solid #2ebd59 2px;
 }
 
@@ -441,4 +467,43 @@ input[type=radio]:checked + label{
   padding: 0 15px;
   border-radius: 20px;
   background-color: #2ebd59;
+}
+
+#song-butt{
+  cursor: pointer;
+  display: inline-block;
+  margin: 10px 87px;
+  padding: 0 15px;
+  border-radius: 20px;
+  background-color: #2ebd59;
+}
+
+#join-butt{
+  cursor: pointer;
+  display: inline-block;
+  margin: 10px 87px;
+  padding: 0 15px;
+  border-radius: 20px;
+  background-color: #2ebd59;
+}
+
+.hit-box{
+  cursor: pointer;
+}
+
+.details div{
+  padding: 5px;
+  text-align: center;
+}
+.details div img{
+  padding-top: 10px;
+  margin: 0 auto;
+}
+
+.details div span{
+  text-transform: none;
+}
+
+.details div > span{
+  font-weight: 300;
 }

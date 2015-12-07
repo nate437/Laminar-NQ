@@ -1,3 +1,10 @@
+<?php
+
+session_start();
+if (!isset($_SESSION["UID"]))
+  header('Location: loginreq.html');
+?>
+
 <!DOCTYPE html>
 <html>
  <head>
@@ -44,6 +51,8 @@
   <link rel="stylesheet" href="css/components.css">
 
   <script src="js/utils.js"></script>
+  <script src="js/moment.js"></script>
+  <script src="js/qr.js"></script>
   <script src="https://fb.me/react-0.13.3.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/JSXTransformer.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
@@ -265,15 +274,34 @@
       </div>
     </div>
 
+    <div id="about-pane" class="modal">
+      <div class="wrapper">
+        <div class="header">
+          Queue Details
+        </div>
+        <div class="backdrop details">
+          <div id="qrcode"></div>
+          <div>
+            <span>ID:</span>
+            <span id="showId" class=""></span>
+          </div>
+          <div>
+            <span>Password:</span>
+            <span id="showPass" class=""></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div id="create-pane" class="modal">
       <div class="wrapper">
         <div class="header">
           create queue
         </div>
         <div class="backdrop">
-          <input type="text" placeholder="Queue Title"/>
+          <input id="Qtitle" type="text" placeholder="Queue Title"/>
           <div class="stripe"></div>
-          <input type="password" placeholder="Queue Password"/>
+          <input id="Qpass" type="password" placeholder="Queue Password"/>
           <div class="stripe"></div>
           <div id="image-search">
           </div>
@@ -284,90 +312,213 @@
       </div>
     </div>
 
+    <div id="join-pane" class="modal">
+      <div class="wrapper">
+        <div class="header">
+          join queue
+        </div>
+        <div class="backdrop">
+          <input id="QID" type="number" placeholder="Queue ID"/>
+          <div class="stripe"></div>
+          <input id="Qpassverif" type="password" placeholder="Queue Password"/>
+          <div class="stripe"></div>
+        </div>
+        <div id="join-butt">
+          Join Queue
+        </div>
+      </div>
+    </div>
+
+    <div id="add-pane" class="modal">
+      <div class="wrapper">
+        <div class="header">
+          add song
+        </div>
+        <div class="backdrop">
+          <div id="song-search">
+          </div>
+        </div>
+        <div id="song-butt">
+          Add Songs
+        </div>
+      </div>
+    </div>
+
   <div class="page-container">
 
     <div class="container" id="queuelistcontainer"></div>
-
-    <div class="container" id="queuecontainer"></div>
 
   </div>
 
 
 <script>
 var createShow = function(){
-
     $("#create-pane, .dim").css({opacity: 1, visibility: "visible"});
-
 }
+var joinShow = function(){
+    $("#join-pane, .dim").css({opacity: 1, visibility: "visible"});
+}
+var addSong= function(){
+    $("#add-pane, .dim").css({opacity: 1, visibility: "visible"});
+}
+
 </script>
 
   <script type="text/jsx" src="js/components.js"></script>
   <script type="text/jsx">
 
   React.render(<ImageSearch />, document.getElementById('image-search'));
-  React.render(
-    <div>
-    <Header title="Queues" subTitle=""/>
-    <ButtonSet buttons="{[{text: 'Create', action: createShow}, {text: 'Join'}]}" />
-    <QueueList header="My Queues" queues="{[{ title: 'Test Queue', subTitle: 'Test Sub Title', participants: 12, imgSrc:'http://www.telegraph.co.uk/travel/destination/article125984.ece/ALTERNATES/w620/bostonwaterfront.jpg'}
-                                            ,{ title: 'Test Queue', subTitle: 'Test Sub Title', participants: 12, imgSrc:'https://static.pexels.com/photos/9694/pexels-photo.jpeg'}
-                                            ,{ title: 'Test Queue', subTitle: 'Test Sub Title', participants: 12, imgSrc:'https://static.pexels.com/photos/12572/photo-1443827423664-eac70d49dd0d.jpeg'}
-                                            ,{ title: 'Test Queue', subTitle: 'Test Sub Title', participants: 12, imgSrc:'https://static.pexels.com/photos/15105/pexels-photo.jpg'}]}"/>
+  React.render(<SongSearch />, document.getElementById('song-search'));
 
-     <QueueList header="Joined Queues" queues="{[{ title: 'Test Queue', subTitle: 'Test Sub Title', participants: 12, imgSrc:'http://www.telegraph.co.uk/travel/destination/article125984.ece/ALTERNATES/w620/bostonwaterfront.jpg'}
-                                             ,{ title: 'Test Queue', subTitle: 'Test Sub Title', participants: 12, imgSrc:'https://static.pexels.com/photos/6657/snow-landscape-nature-sky.jpeg'}
-                                             ,{ title: 'Test Queue', subTitle: 'Test Sub Title', participants: 12, imgSrc:'https://static.pexels.com/photos/9694/pexels-photo.jpeg'}
-                                             ,{ title: 'Test Queue', subTitle: 'Test Sub Title', participants: 12, imgSrc:'https://static.pexels.com/photos/8155/pexels-photo.jpg'}]}"/>
-  </div>  , document.getElementById('queuelistcontainer')
-  );
-
-  React.render(
-    <div><Header title="Test" subTitle="subtitle" imgSrc="http://marketing.mst.edu/media/universityadvancement/communications/images/logos/joeminer/Historic_Joe_Miner.jpg"/>
-    <ButtonSet buttons="{[{text: 'btn1'}, {text: 'btn2'}]}" /></div>
-
-    , document.getElementById('queuecontainer')
-
-  );
-  //    <div className="sub-container"><Playlist url="https://api.spotify.com/v1/me/tracks" /></div></div>
   $("#settingsbut").click(function(){
     $("#settings-pane, .dim").css({opacity: 1, visibility: "visible"});
     $("#settingsbut svg g path, #settingsbut .icon-text").css({color: '#26ADC4 !important', fill: '#26ADC4 !important'});
   });
 
   $(".dim").click(function(){
-    $("#settings-pane, #create-pane, .dim").css({opacity: 0, visibility: "hidden"});
+    $("#settings-pane, #create-pane, #add-pane, #join-pane, #about-pane, .dim").css({opacity: 0, visibility: "hidden"});
   });
 
   var refreshQueues = function(){
-    $("#settings-pane, #create-pane, .dim").css({opacity: 0, visibility: "hidden"});
     $.ajax({
       url: "http://laminarnq.com/requests/myQueues.php",
       dataType: 'json',
       cache: false,
       success: function(data) {
-        React.render(
-          <div>
-          <Header title="Queues" subTitle=""/>
-          <ButtonSet buttons="{[{text: 'Create', action: createShow}, {text: 'Join'}]}" />
-          <QueueList header="My Queues" queues="{[{ title: 'Test Queue', subTitle: 'Test Sub Title', participants: 12, imgSrc:'http://www.telegraph.co.uk/travel/destination/article125984.ece/ALTERNATES/w620/bostonwaterfront.jpg'}
-                                                  ,{ title: 'Test Queue', subTitle: 'Test Sub Title', participants: 12, imgSrc:'https://static.pexels.com/photos/9694/pexels-photo.jpeg'}
-                                                  ,{ title: 'Test Queue', subTitle: 'Test Sub Title', participants: 12, imgSrc:'https://static.pexels.com/photos/12572/photo-1443827423664-eac70d49dd0d.jpeg'}
-                                                  ,{ title: 'Test Queue', subTitle: 'Test Sub Title', participants: 12, imgSrc:'https://static.pexels.com/photos/15105/pexels-photo.jpg'}]}"/>
+        $.ajax({
+          url: "http://laminarnq.com/requests/getJoinedQueues.php",
+          dataType: 'json',
+          cache: false,
+          success: function(joinedData) {
+            React.render(
+              <div>
+              <Header title="Queues" subTitle=""/>
+              <ButtonSet buttons="{[{text: 'Create', action: createShow}, {text: 'Join', action: joinShow}]}" />
+              <QueueList header="My Queues" owned="true" queues={data}/>
 
-           <QueueList header="Joined Queues" queues="{[{ title: 'Test Queue', subTitle: 'Test Sub Title', participants: 12, imgSrc:'http://www.telegraph.co.uk/travel/destination/article125984.ece/ALTERNATES/w620/bostonwaterfront.jpg'}
-                                                   ,{ title: 'Test Queue', subTitle: 'Test Sub Title', participants: 12, imgSrc:'https://static.pexels.com/photos/6657/snow-landscape-nature-sky.jpeg'}
-                                                   ,{ title: 'Test Queue', subTitle: 'Test Sub Title', participants: 12, imgSrc:'https://static.pexels.com/photos/9694/pexels-photo.jpeg'}
-                                                   ,{ title: 'Test Queue', subTitle: 'Test Sub Title', participants: 12, imgSrc:'https://static.pexels.com/photos/8155/pexels-photo.jpg'}]}"/>
-        </div>  , document.getElementById('queuelistcontainer')
-        );
-      }.bind(this),
+               <QueueList header="Joined Queues" owned="false" queues={joinedData}/>
+            </div>  , document.getElementById('queuelistcontainer')
+            );
+          },
+          error: function(xhr, status, err) {
+            console.error(xhr, status, err.toString());
+          }
+        });
+      },
       error: function(xhr, status, err) {
-        console.error(this.props.url, status, err.toString());
-      }.bind(this)
+        console.error(xhr, status, err.toString());
+      }
     });
   }
 
-  $("#create-butt").click(refreshQueues());
+  var currQ = "0";
+  var currT = "";
+  var currS = "";
+  var currI = "";
+  var showQueue = function(id, title, sub, img){
+    $("#settings-pane, #create-pane, #add-pane, .dim").css({opacity: 0, visibility: "hidden"});
+    currQ = id;
+    currT = title;
+    currS = sub;
+    currI = img;
+    React.render(
+      <div>
+      <Header title={title} subTitle={sub} imgSrc={img}/>
+      <ButtonSet buttons="{[{text: 'Add Song', action: addSong}]}" />
+      <div className="sub-container"><Playlist url={"requests/getQueue.php?qid=" + id} /></div>
+    </div>  , document.getElementById('queuelistcontainer'));
+  }
+
+  var remQueue = function(id){
+    $.ajax({
+      type: "GET",
+      url: "http://laminarnq.com/requests/removeQueue.php?QID=" + id,
+      success: function(data) {
+        refreshQueues();
+      },
+      error: function(xhr, status, err) {
+        console.error(xhr, status, err.toString());
+      }
+    });
+  }
+
+  var detQueue = function(id, pass){
+    var qrcode = new QRCode(document.getElementById("qrcode"), {
+      text: "http://laminarnq.com/requests/joinQueue.php?qid="+id+"&pass="+pass,
+      width: 128,
+      height: 128,
+      colorDark : "#2ebd59",
+      colorLight : "#000000",
+      correctLevel : QRCode.CorrectLevel.H
+    });
+    $("#showId").html(id);
+    $("#showPass").html(pass);
+    $("#about-pane, .dim").css({opacity: 1, visibility: "visible"});
+  }
+
+  $("#join-butt").click(function(){
+    $.ajax({
+      type: "GET",
+      url: "http://laminarnq.com/requests/joinQueue.php?qid=" + $("#QID").val() + "&pass=" + $("#Qpassverif").val(),
+      success: function(data) {
+        if (data == "false")
+          alert("Incorrect password or Queue ID");
+
+        refreshQueues();
+        $("#settings-pane, #create-pane, #add-pane, #join-pane, .dim").css({opacity: 0, visibility: "hidden"});
+      },
+      error: function(xhr, status, err) {
+        console.error(xhr, status, err.toString());
+      }
+    });
+  });
+
+  $("#create-butt").click(function(){
+    $.ajax({
+      type: "POST",
+      url: "http://laminarnq.com/requests/createQueue.php",
+      data: {name: $("#Qtitle").val(), pic: $("input[name=imageSrc]:checked").val(), pass: $("#Qpass").val()},
+      success: function(data) {
+        refreshQueues();
+      },
+      error: function(xhr, status, err) {
+        console.error(xhr, status, err.toString());
+      }
+    });
+  });
+
+  $("#song-butt").click(function(){
+    var songs = "";
+    $("#song-search div input:checked").each(function(i, e){
+      songs += "spotify:track:" + $(this).val() + ",";
+    })
+    songs.slice(0,-1);
+    $.ajax({
+      type: "POST",
+      url: "http://laminarnq.com/requests/addToQueue.php?qid=" + currQ,
+      data: {uris: songs},
+      success: function(data) {
+        showQueue(currQ, currT, currS, currI);
+      },
+      error: function(xhr, status, err) {
+        console.error(xhr, status, err.toString());
+      }
+    });
+  });
+
+  $("#savedbut").click(function(){
+    React.render(
+      <div>
+      <Header title="Saved Tracks" subTitle=""/>
+      <div className="sub-container"><Playlist url="requests/savedSongs.php" /></div>
+    </div>  , document.getElementById('queuelistcontainer'));
+  });
+
+  $("#queuesbut").click(function(){
+    refreshQueues();
+  });
+
+  refreshQueues();
   </script>
 
  </body>

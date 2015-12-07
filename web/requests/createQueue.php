@@ -2,12 +2,12 @@
 require('../../conf.php');
 session_start();
 $uid = mysqli_real_escape_string($db_con, $_SESSION["UID"]);
-$PLName = mysqli_real_escape_string($db_con, $_GET["name"]);
-$imgSrc = mysqli_real_escape_string($db_con, $_GET["pic"]);
-$pass = mysqli_real_escape_string($db_con, $_GET["pass"]);
+$PLName = mysqli_real_escape_string($db_con, $_POST["name"]);
+$imgSrc = mysqli_real_escape_string($db_con, $_POST["pic"]);
+$pass = mysqli_real_escape_string($db_con, $_POST["pass"]);
 require('updateToken.php');
 
-$SPcheck = mysqli_query($db_con, "SELECT hasSP FROM People WHERE ID = " . $uid);
+$SPcheck = mysqli_query($db_con, "SELECT hasSP FROM People WHERE hasSP=1 AND ID = '" . $uid . "'");
 
 if ( mysqli_num_rows($SPcheck) == 0){
   echo "false";
@@ -31,4 +31,6 @@ curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 $result = json_decode(curl_exec($ch));
 curl_close($ch);
 
-mysqli_query($db_con, "INSERT INTO Queue (QID, Owner, Photo, SPID, Pass) VALUES (" . rand(10000, 99999) . "," . $uid . ",'" . $imgSrc . "','" . $result->id . "','" . $pass . "')");
+mysqli_query($db_con, "INSERT INTO Queue (Title, QID, Owner, Photo, SPID, Pass) VALUES ('" . $PLName . "'," . rand(10000, 99999) . ",'" . $uid . "','" . $imgSrc . "','" . $result->id . "','" . $pass . "')");
+
+?>
