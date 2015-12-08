@@ -361,7 +361,18 @@ var joinShow = function(){
 var addSong= function(){
     $("#add-pane, .dim").css({opacity: 1, visibility: "visible"});
 }
-
+var removeSong = function(id, qid){
+    $.ajax({
+      type: "GET",
+      url: "http://laminarnq.com/requests/removeFromQueue.php?sid="+id+"&qid=" + qid,
+      success: function(data) {
+        showQueue(currQ, currT, currS, currI);
+      },
+      error: function(xhr, status, err) {
+        console.error(xhr, status, err.toString());
+      }
+    });
+}
 </script>
 
   <script type="text/jsx" src="js/components.js"></script>
@@ -425,8 +436,9 @@ var addSong= function(){
       <div>
       <Header title={title} subTitle={sub} imgSrc={img}/>
       <ButtonSet buttons="{[{text: 'Add Song', action: addSong}]}" />
-      <div className="sub-container"><Playlist url={"requests/getQueue.php?qid=" + id} /></div>
+      <Playlist qid={id} saved={false} url={"requests/getQueue.php?qid=" + id} update={true} />
     </div>  , document.getElementById('queuelistcontainer'));
+
   }
 
   var remQueue = function(id){
@@ -463,9 +475,10 @@ var addSong= function(){
       success: function(data) {
         if (data == "false")
           alert("Incorrect password or Queue ID");
-
+        else{
         refreshQueues();
         $("#settings-pane, #create-pane, #add-pane, #join-pane, .dim").css({opacity: 0, visibility: "hidden"});
+        }
       },
       error: function(xhr, status, err) {
         console.error(xhr, status, err.toString());
@@ -480,6 +493,7 @@ var addSong= function(){
       data: {name: $("#Qtitle").val(), pic: $("input[name=imageSrc]:checked").val(), pass: $("#Qpass").val()},
       success: function(data) {
         refreshQueues();
+        $("#settings-pane, #create-pane, #add-pane, #join-pane, .dim").css({opacity: 0, visibility: "hidden"});
       },
       error: function(xhr, status, err) {
         console.error(xhr, status, err.toString());
@@ -510,7 +524,7 @@ var addSong= function(){
     React.render(
       <div>
       <Header title="Saved Tracks" subTitle=""/>
-      <div className="sub-container"><Playlist url="requests/savedSongs.php" /></div>
+      <div className="sub-container"><Playlist saved={true} url="requests/savedSongs.php" /></div>
     </div>  , document.getElementById('queuelistcontainer'));
   });
 

@@ -6,7 +6,7 @@ $uid = mysqli_real_escape_string($db_con, $_SESSION["UID"]);
 require('updateToken.php');
 
 // Get the Saved Songs list from Spotify for a Spotify User
-$url = "https://api.spotify.com/v1/me/tracks";
+$url = "https://api.spotify.com/v1/me/tracks?limit=50";
 
 $SPcheck = mysqli_query($db_con, "SELECT hasSP FROM People WHERE hasSP=1 AND ID = '" . $uid . "'");
 if ( mysqli_num_rows($SPcheck) == 0){
@@ -51,7 +51,6 @@ if ( mysqli_num_rows($SPcheck) == 0){
     echo $result;
   }
 } else {
-
   // Get the Spotify users list of saved songs
   //open connection
   $ch = curl_init();
@@ -62,9 +61,13 @@ if ( mysqli_num_rows($SPcheck) == 0){
   curl_setopt($ch,CURLOPT_HTTPHEADER, array("Authorization: Bearer " . $accessToken));
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-  $result = curl_exec($ch);
+  $result = json_decode(curl_exec($ch));
   curl_close($ch);
 
-  echo $result;
+  foreach($result->items as $index => $item){
+    $item->track->saved = true;
+  }
+
+  echo json_encode($result);
 }
 ?>

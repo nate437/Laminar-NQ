@@ -45,9 +45,41 @@ var SaveButton = React.createClass({
 	getInitialState: function() {
     return {saved: this.props.saved};
   },
+	componentWillReceiveProps: function(newProps) {
+	  if (newProps.saved != this.state.saved) {
+	    this.setState({saved: newProps.saved});
+	  }
+	},
   handleClick: function(event) {
     this.setState({saved: !this.state.saved});
+		if (!this.state.saved)
+		  this.save(this.props.id);
+		else
+		  this.unsave(this.props.id)
   },
+	save: function(id) {
+		$.ajax({
+      type: "GET",
+      url: "http://laminarnq.com/requests/saveSong.php?sid=" + id,
+      success: function(data) {
+
+      },
+      error: function(xhr, status, err) {
+        console.error(xhr, status, err.toString());
+      }
+    });
+	},
+	unsave: function(id) {
+		$.ajax({
+			type: "GET",
+			url: "http://laminarnq.com/requests/unsaveSong.php?sid=" + id,
+			success: function(data) {
+			},
+			error: function(xhr, status, err) {
+				console.error(xhr, status, err.toString());
+			}
+		});
+	},
 	render: function(){
 		var icon = this.state.saved ? 'icon-check' : 'icon-plus';
     return (
@@ -64,6 +96,11 @@ var SaveButton = React.createClass({
 var PopMenu = React.createClass({
 	getInitialState: function() {
 		return {open: false};
+	},
+	componentWillReceiveProps: function(newProps) {
+		if (newProps.open != this.state.open) {
+			this.setState({open: newProps.open});
+		}
 	},
 	handleClick: function(event) {
 		this.setState({open: !this.state.open});
@@ -106,15 +143,22 @@ var PopMenu = React.createClass({
 var Playlist = React.createClass({
 
     getInitialState: function() {
-      return {data: []};
+      return {data: [], update: false};
     },
+		componentWillReceiveProps: function(newProps) {
+			if (newProps.update != this.state.update) {
+				this.props.update = this.state.update;
+				this.refresh();
+			}
+		},
 		refresh: function() {
 			$.ajax({
 				url: this.props.url,
 				dataType: 'json',
 				cache: false,
 				success: function(data) {
-					this.setState({data: data.items});
+					if(this.isMounted())
+					  this.setState({data: data.items});
 				}.bind(this),
 				error: function(xhr, status, err) {
 					console.error(xhr, status, err.toString());
@@ -125,22 +169,22 @@ var Playlist = React.createClass({
 			this.refresh();
 			setInterval(this.refresh, 10000);
     },
-
     render: function() {
 
       var playlistItems = this.state.data == [] ? "There's nothing here yet." : this.state.data.map(function (item) {
         return (
           <tr>
-					<td><SaveButton saved={item.track.saved}/></td>
+					<td><SaveButton id={item.track.id} saved={item.track.saved}/></td>
           <td>{item.track.name}</td>
           <td>{item.track.artists[0].name}</td>
           <td className="hide-small">{Math.floor((item.track.duration_ms / 1000) / 60) + ":" + ("00" + Math.floor((item.track.duration_ms / 1000) % 60)).substr(-2,2)}</td>
-          <td><PopMenu options="{[{text: 'artist', icon: 'icon-person', color: '#2ebd59'},{text: 'album', icon: 'icon-disc', color: '#26ADC4'},{text: 'delete', icon: 'icon-trash', color: '#CA3645'}]}" /></td>
+          <td><PopMenu open={false} options={"{[{text: 'artist', icon: 'icon-person', color: '#2ebd59'},{text: 'album', icon: 'icon-disc', color: '#26ADC4'}" + (this.props.saved ? "]}" : ",{func: function(){removeSong('"+item.track.id+"','"+this.props.qid+"');}, text: 'delete', icon: 'icon-trash', color: '#CA3645'}]}")} /></td>
           </tr>
         );
-      });
+      }.bind(this));
 
       return (
+				<div className="sub-container">
         <table className="u-full-width playlist">
           <thead>
             <tr>
@@ -155,6 +199,7 @@ var Playlist = React.createClass({
             {playlistItems}
           </tbody>
         </table>
+				</div>
       );
     }
 });
